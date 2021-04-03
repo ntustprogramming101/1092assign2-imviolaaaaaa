@@ -110,7 +110,12 @@ void draw() {
       stroke(255, 255, 0);
       fill(253, 184, 19);
       ellipse(590, 50, 120,120);
-     
+      
+      //draw cabbage
+      if(cabbageAppear == true){
+          image(cabbage, cabbageX, cabbageY);
+      }else{lifeNumber++;}
+      
       // life
       for(int i = 0; i < lifeNumber ; i++){
         lifeX = 10 + LIFE_SPACE * i;
@@ -132,11 +137,6 @@ void draw() {
            groundhogY = SINGLE_SPACE * 1;
            lifeNumber--;
          }
-         
-      //draw cabbage
-      if(cabbageAppear == true){
-          image(cabbage, cabbageX, cabbageY);
-      }else{lifeNumber++;}
       
       //hit detection for cabbage
       if(groundhogX < cabbageX + CABBAGE_SIZE
