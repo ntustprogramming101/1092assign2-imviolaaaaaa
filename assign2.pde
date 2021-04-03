@@ -79,7 +79,7 @@ void draw() {
   // Switch Game State
   switch(gameState){  
     
-    //game start
+    //GAME START
     case GAME_START:
       image(title, 0, 0);
       
@@ -95,7 +95,7 @@ void draw() {
          }
       break;
     
-    //game run
+    //GAME RUN
     case GAME_RUN:
       
       //background elements
@@ -136,20 +136,17 @@ void draw() {
       //draw cabbage
       if(cabbageAppear == true){
           image(cabbage, cabbageX, cabbageY);
-      }
+      }else{lifeNumber++;}
       
       //hit detection for cabbage
       if(groundhogX < cabbageX + CABBAGE_SIZE
          && groundhogX + GROUNDHOG_SIZE > cabbageX
          && groundhogY < cabbageY + CABBAGE_SIZE
          && groundhogY + GROUNDHOG_SIZE > soldierY){
-           cabbageAppear = false;
-           lifeNumber++;
+           cabbageAppear = false; 
          }
-         
-
-        
-      //gameover 
+                 
+      //gameover detection
        if(lifeNumber <= 0){
          gameState = GAME_LOSE;
        }
@@ -174,10 +171,9 @@ void draw() {
       if(groundhogX < 0){
           groundhogX = 0; 
         }    
-        
       break;
       
-    //game lose  
+    //GAME LOSE 
     case GAME_LOSE:
       image(gameover, 0, 0);     
       if(mouseX > BUTTON_LEFT && mouseX < BUTTON_RIGHT
@@ -214,17 +210,17 @@ void keyPressed(){
     case DOWN:
       groundhogY += GROUNDHOG_SPEED;
       downPressed = true;
-      break;
+    break;
     
     case LEFT:
       groundhogX -= GROUNDHOG_SPEED;
       leftPressed = true;
-      break;
+    break;
       
     case RIGHT:
       groundhogX += GROUNDHOG_SPEED;
       rightPressed = true;
-      break;
+    break;
   }
 }
 
@@ -232,14 +228,14 @@ void keyReleased(){
     switch(keyCode){
     case DOWN:
       downPressed = false;
-      break;
+    break;
     
     case LEFT:
       leftPressed = false;
-      break;
+    break;
       
     case RIGHT:
       rightPressed = false;
-      break;
+    break;
   }
 }
