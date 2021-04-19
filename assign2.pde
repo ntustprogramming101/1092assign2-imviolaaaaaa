@@ -10,7 +10,6 @@ int gameState = GAME_START;
 boolean downPressed = false;
 boolean leftPressed = false;
 boolean rightPressed = false;
-//boolean cabbageAppear = true;
 
 final int BUTTON_TOP = 360;
 final int BUTTON_BOTTOM = 360 + 60;
@@ -111,6 +110,7 @@ void draw() {
       fill(253, 184, 19);
       ellipse(590, 50, 120,120);
       
+      
       // life
       for(int i = 0; i < lifeNumber ; i++){
         lifeX = 10 + LIFE_SPACE * i;
@@ -124,6 +124,7 @@ void draw() {
       if(soldierX >= width){
         soldierX = -SOLDIER_SIZE;
       }
+      //soldierX %= (width + SOLDIER_SIZE);
  
       //hit detection for soldier
       if(groundhogX < soldierX + SOLDIER_SIZE
@@ -181,9 +182,20 @@ void draw() {
       if(mouseX > BUTTON_LEFT && mouseX < BUTTON_RIGHT
          && mouseY > BUTTON_TOP && mouseY < BUTTON_BOTTOM){
            image(restartHovered, 248, 360);
+           
            if(mousePressed){
              gameState = GAME_RUN;
-             setup();
+             
+             lifeNumber = 2;
+             
+             //soldier random floor appearance
+             soldierX = SINGLE_SPACE * (floor(random(8))); 
+             soldierY = SOLDIER_START_Y + SINGLE_SPACE * (floor(random(4)));
+              
+             //cabbage random appearance
+             cabbageX = SINGLE_SPACE * (floor(random(8))); //80*(0~7)
+             cabbageY = CABBAGE_START_Y + SINGLE_SPACE * (floor(random(4)));//80*(0~3)
+             
            }
        }else{
          image(restartNormal, 248, 360);
