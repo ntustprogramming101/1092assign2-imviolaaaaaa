@@ -10,7 +10,7 @@ int gameState = GAME_START;
 boolean downPressed = false;
 boolean leftPressed = false;
 boolean rightPressed = false;
-boolean cabbageAppear = true;
+//boolean cabbageAppear = true;
 
 final int BUTTON_TOP = 360;
 final int BUTTON_BOTTOM = 360 + 60;
@@ -21,7 +21,6 @@ final int SINGLE_SPACE = 80;
 
 final int LIFE_WIDTH = 50;
 final int LIFE_SPACE = 50 + 20;
-final int LIFE_MAX_NUMBER = 3;
 
 final int CABBAGE_SIZE = 80;
 final int CABBAGE_START_Y = 160;
@@ -35,7 +34,7 @@ final int SOLDIER_START_Y = 160;
 float groundhogX, groundhogY;
 float cabbageX, cabbageY;
 float soldierX, soldierY;
-float soldierXSpeed = 3;
+float soldierXSpeed = 2;
 float lifeX, lifeY;
 float lifeNumber = 2;
 
@@ -72,6 +71,7 @@ void setup() {
   //groundhog
   groundhogX = SINGLE_SPACE * 4;
   groundhogY = SINGLE_SPACE * 1;
+  
 }
 
 void draw() {
@@ -111,11 +111,6 @@ void draw() {
       fill(253, 184, 19);
       ellipse(590, 50, 120,120);
       
-      //draw cabbage
-      if(cabbageAppear == true){
-          image(cabbage, cabbageX, cabbageY);
-      }else{lifeNumber++;}
-      
       // life
       for(int i = 0; i < lifeNumber ; i++){
         lifeX = 10 + LIFE_SPACE * i;
@@ -126,7 +121,9 @@ void draw() {
       // draw soldier & soldier movement
       image(soldier, soldierX, soldierY);
       soldierX += soldierXSpeed;
-      soldierX %= (width + SOLDIER_SIZE);
+      if(soldierX >= width){
+        soldierX = -SOLDIER_SIZE;
+      }
  
       //hit detection for soldier
       if(groundhogX < soldierX + SOLDIER_SIZE
@@ -137,13 +134,18 @@ void draw() {
            groundhogY = SINGLE_SPACE * 1;
            lifeNumber--;
          }
+         
+      //draw cabbage
+      image(cabbage, cabbageX, cabbageY);
       
       //hit detection for cabbage
       if(groundhogX < cabbageX + CABBAGE_SIZE
          && groundhogX + GROUNDHOG_SIZE > cabbageX
          && groundhogY < cabbageY + CABBAGE_SIZE
          && groundhogY + GROUNDHOG_SIZE > soldierY){
-           cabbageAppear = false; 
+           cabbageX = -CABBAGE_SIZE;
+           cabbageY = -CABBAGE_SIZE;
+           lifeNumber++; 
          }
                  
       //gameover detection
@@ -179,24 +181,9 @@ void draw() {
       if(mouseX > BUTTON_LEFT && mouseX < BUTTON_RIGHT
          && mouseY > BUTTON_TOP && mouseY < BUTTON_BOTTOM){
            image(restartHovered, 248, 360);
-           
            if(mousePressed){
              gameState = GAME_RUN;
-            
-            //soldier random floor appearance
-            soldierX = SINGLE_SPACE * (floor(random(8))); 
-            soldierY = SOLDIER_START_Y + SINGLE_SPACE * (floor(random(4)));
-            
-            //cabbage random appearance
-            cabbageX = SINGLE_SPACE * (floor(random(8))); //80*(0~7)
-            cabbageY = CABBAGE_START_Y + SINGLE_SPACE * (floor(random(4)));//80*(0~3)          
-            
-            // life
-            for(int i = 0; i < lifeNumber ; i++){
-              lifeX = 10 + LIFE_SPACE * i;
-              lifeY = 10;
-              image(life, lifeX, lifeY);
-             } 
+             setup();
            }
        }else{
          image(restartNormal, 248, 360);
