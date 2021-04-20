@@ -25,7 +25,6 @@ final int CABBAGE_SIZE = 80;
 final int CABBAGE_START_Y = 160;
 
 final int GROUNDHOG_SIZE = 80;
-final int GROUNDHOG_SPEED = 80;
 
 final int SOLDIER_SIZE = 80;
 final int SOLDIER_START_Y = 160;
@@ -36,6 +35,7 @@ float soldierX, soldierY;
 float soldierXSpeed = 2;
 float lifeX, lifeY;
 float lifeNumber = 2;
+int actionframe = 15;
 
 void setup() {
   size(640, 480);
@@ -110,14 +110,19 @@ void draw() {
       fill(253, 184, 19);
       ellipse(590, 50, 120,120);
       
+      //hit detection for cabbage
+      if(groundhogX < cabbageX + CABBAGE_SIZE
+         && groundhogX + GROUNDHOG_SIZE > cabbageX
+         && groundhogY < cabbageY + CABBAGE_SIZE
+         && groundhogY + GROUNDHOG_SIZE > cabbageY){
+           cabbageX = -CABBAGE_SIZE;
+           cabbageY = -CABBAGE_SIZE;
+           lifeNumber++; 
+         }
+         
+      //draw cabbage
+      image(cabbage, cabbageX, cabbageY);
       
-      // life
-      for(int i = 0; i < lifeNumber ; i++){
-        lifeX = 10 + LIFE_SPACE * i;
-        lifeY = 10;
-        image(life, lifeX, lifeY);
-        }   
-        
       // draw soldier & soldier movement
       image(soldier, soldierX, soldierY);
       soldierX += soldierXSpeed;
@@ -136,24 +141,18 @@ void draw() {
            lifeNumber--;
          }
          
-      //draw cabbage
-      image(cabbage, cabbageX, cabbageY);
-      
-      //hit detection for cabbage
-      if(groundhogX < cabbageX + CABBAGE_SIZE
-         && groundhogX + GROUNDHOG_SIZE > cabbageX
-         && groundhogY < cabbageY + CABBAGE_SIZE
-         && groundhogY + GROUNDHOG_SIZE > soldierY){
-           cabbageX = -CABBAGE_SIZE;
-           cabbageY = -CABBAGE_SIZE;
-           lifeNumber++; 
-         }
-                 
+      // draw life
+      for(int i = 0; i < lifeNumber ; i++){
+        lifeX = 10 + LIFE_SPACE * i;
+        lifeY = 10;
+        image(life, lifeX, lifeY);
+        }           
+                       
       //gameover detection
        if(lifeNumber <= 0){
          gameState = GAME_LOSE;
        }
-       
+          
       // draw groundhog     
       if(downPressed){
         image(groundhogDown, groundhogX, groundhogY);
@@ -164,16 +163,6 @@ void draw() {
       }else{image(groundhogIdle, groundhogX, groundhogY);
       }
       
-      //groundhog boundary detection
-      if(groundhogY > height - SINGLE_SPACE){
-          groundhogY = height - SINGLE_SPACE; 
-        }    
-      if(groundhogX > width - SINGLE_SPACE){
-          groundhogX = width - SINGLE_SPACE; 
-        }
-      if(groundhogX < 0){
-          groundhogX = 0; 
-        }    
       break;
       
     //GAME LOSE 
@@ -200,41 +189,56 @@ void draw() {
        }else{
          image(restartNormal, 248, 360);
        } 
+       
       break;
   }
 }
 
+            
 void keyPressed(){
-  switch(keyCode){
-    case DOWN:
-      groundhogY += GROUNDHOG_SPEED;
-      downPressed = true;
-    break;
-    
-    case LEFT:
-      groundhogX -= GROUNDHOG_SPEED;
-      leftPressed = true;
-    break;
-      
-    case RIGHT:
-      groundhogX += GROUNDHOG_SPEED;
-      rightPressed = true;
-    break;
-  }
-}
-
-void keyReleased(){    
     switch(keyCode){
-    case DOWN:
-      downPressed = false;
-    break;
-    
-    case LEFT:
-      leftPressed = false;
-    break;
+      case DOWN:      
+        downPressed = true;
+        groundhogY += SINGLE_SPACE;
+
+        if(groundhogY > height - SINGLE_SPACE){
+          groundhogY = height - SINGLE_SPACE; 
+        }
+      break;
       
-    case RIGHT:
-      rightPressed = false;
-    break;
+      case LEFT:        
+        leftPressed = true;
+        groundhogX -= SINGLE_SPACE;
+        
+        if(groundhogX < 0){
+          groundhogX = 0; 
+        }     
+      break;
+        
+      case RIGHT:
+        rightPressed = true;
+        groundhogX += SINGLE_SPACE; 
+        
+        if(groundhogX > width - SINGLE_SPACE){
+           groundhogX = width - SINGLE_SPACE; 
+        }        
+      break;
+        
+    }  
   }
+
+void keyReleased(){
+      switch(keyCode){
+      case DOWN:
+        downPressed = false;
+      break;
+      
+      case LEFT:
+        leftPressed = false;
+      break;
+        
+      case RIGHT:
+        rightPressed = false;
+      break;
+    }  
 }
